@@ -12,7 +12,7 @@ learning_rate = 1e-2
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 eval_iters = 200
 embedding_dim = 128
-hidden_dim = 256
+hidden_dim = 128
 
 torch.manual_seed(9527)
 
@@ -43,7 +43,7 @@ def get_batch(split):
 
 
 @torch.no_grad()
-def estimate_loss(model):
+def estimate_loss(model: nn.Module):
     out = {}
     model.eval()
     for split in ['train', 'val']:
@@ -58,7 +58,7 @@ def estimate_loss(model):
 
 
 class BigramLanguageModel(nn.Module):
-    def __init__(self, vocab_size, embedding_dim, hidden_dim):
+    def __init__(self, vocab_size: int, embedding_dim: int, hidden_dim: int):
         super().__init__()
         self.token_embedding_table = nn.Embedding(vocab_size, embedding_dim)
         self.linear = nn.Linear(embedding_dim, hidden_dim)
@@ -111,3 +111,4 @@ for iter in range(max_iters):
 # generate from the model
 context = torch.zeros((1, 1), dtype=torch.long, device=device)
 print(decode(m.generate(context, max_new_tokens=500)[0].tolist()))
+
