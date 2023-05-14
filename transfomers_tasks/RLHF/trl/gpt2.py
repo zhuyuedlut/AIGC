@@ -70,7 +70,7 @@ class ValueHead(nn.Module):
 
 class GPT2HeadWithValueModel(GPT2PreTrainedModel):
     def __init__(self, config):
-        super().__init__()
+        super().__init__(config)
         config.num_labels = 1
         self.transformer = GPT2Model(config)
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
@@ -95,8 +95,9 @@ class GPT2HeadWithValueModel(GPT2PreTrainedModel):
         mc_token_ids=None,
         lm_labels=None,
         mc_labels=None,
-        return_dict=None,
+        return_dict=False,
         output_attentions=False,
+        output_hidden_states=False,
         use_cache=True,
     ):
         loss = None
