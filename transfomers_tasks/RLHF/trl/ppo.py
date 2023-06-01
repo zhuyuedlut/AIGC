@@ -196,12 +196,13 @@ class PPOTrainer:
         for i in range(int(bs / fbs)):
             query_batch = queries[i * fbs: (i + 1) * fbs]
             response_batch = responses[i * fbs: (i + 1) * fbs]
-            input_ids = self.data_collator([torch.cat([q, r]) for q, r in zip(query_batch, response_batch)])[
-                "input_ids"]
+
+            input_ids = self.data_collator([torch.cat([q, r]) for q, r in zip(query_batch, response_batch)])["input_ids"]
             with torch.no_grad():
-                logits, _, v = self.model(
-                    input_ids)  # logits -> (batch, max_output_len, vocab_size); v -> (batch, max_ouput_len)
+                # logits -> (batch, max_output_len, vocab_size); v -> (batch, max_ouput_len)
+                logits, _, v = self.model(input_ids)
                 ref_logits, _, _ = self.ref_model(input_ids)
+
             logprobs = logprobs_from_logits(logits[:, :-1, :], input_ids[:, 1:])  # (batch, seq_len - 1)
             ref_logprobs = logprobs_from_logits(ref_logits[:, :-1, :], input_ids[:, 1:])  # (batch, seq_len - 1)
             for j in range(fbs):
