@@ -11,7 +11,7 @@ import datasets
 import os
 
 
-tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained('./chatglm-6b', trust_remote_code=True)
 
 
 @dataclass
