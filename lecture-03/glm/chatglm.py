@@ -581,15 +581,19 @@ class ChatGLMPreTrainedModel(PreTrainedModel):
         batch_size, seq_length = input_ids.shape
         if use_gmasks is None:
             use_gmasks = [False] * batch_size
+
         context_lengths = [seq.tolist().index(self.config.bos_token_id) for seq in input_ids]
+
         if self.position_encoding_2d:
             position_ids = torch.arange(seq_length, dtype=torch.long, device=device).unsqueeze(0).repeat(batch_size, 1)
+
             for i, context_length in enumerate(context_lengths):
                 position_ids[i, context_length:] = mask_positions[i]
+
             block_position_ids = [
                 torch.cat((
-                torch.zeros(context_length, dtype=torch.long, device=device),
-                torch.arange(seq_length - context_length, dtype=torch.long, device=device) + 1
+                    torch.zeros(context_length, dtype=torch.long, device=device),
+                    torch.arange(seq_length - context_length, dtype=torch.long, device=device) + 1
             )) for context_length in context_lengths]
             block_position_ids = torch.stack(block_position_ids, dim=0)
             position_ids = torch.stack((position_ids, block_position_ids), dim=1)
