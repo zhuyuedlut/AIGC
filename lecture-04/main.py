@@ -1,5 +1,3 @@
-import os.path
-
 from transformers import AutoModel, AutoTokenizer
 from peft import LoraConfig, TaskType, prepare_model_for_int8_training, get_peft_model
 
@@ -8,11 +6,12 @@ from datasets import Dataset
 
 from finetune import ModifiedTrainer, data_collator
 from transformers import TrainingArguments
+from chatglm.modeling_chatglm import ChatGLMForConditionalGeneration
 
 
 if __name__ == '__main__':
-    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path='./chatglm-6b', trust_remote_code=True)
-    model = AutoModel.from_pretrained(pretrained_model_name_or_path='./chatglm-6b', trust_remote_code=True, load_in_8bit=True, device_map='auto')
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path='chatglm', trust_remote_code=True)
+    model = ChatGLMForConditionalGeneration.from_pretrained(pretrained_model_name_or_path='chatglm', trust_remote_code=True, load_in_8bit=True, device_map='auto')
 
     input_text = "假设你现在是一个游戏策划，现在你要设计一款生存类的RPG游戏，请帮忙设计这款游戏的世界机制："
 
